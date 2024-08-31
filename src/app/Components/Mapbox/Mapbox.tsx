@@ -23,11 +23,13 @@ const FlyToActiveCity: React.FC<FlyToActiveCityProps> = ({ activeCityCoords }) =
         duration: 1.5,
       };
 
-      map.flyTo(
-        [activeCityCoords.lat, activeCityCoords.lon],
-        zoomLev,
-        flyToOptions
-      );
+      if (map) {
+        map.flyTo(
+          [activeCityCoords.lat, activeCityCoords.lon],
+          zoomLev,
+          flyToOptions
+        );
+      }
     }
   }, [activeCityCoords, map]);
 
@@ -50,6 +52,8 @@ function Mapbox() {
   return (
     <div className="flex-1 basis-[50%] border rounded-lg">
       <MapContainer
+        center={[activeCityCords.lat, activeCityCords.lon]}
+        zoom={13}
         className="rounded-lg m-4"
         style={{ height: "calc(100% - 2rem)", width: "calc(100% - 2rem)" }}
       >
