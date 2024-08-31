@@ -9,29 +9,17 @@ interface Coordinates {
   lon: number;
 }
 
-interface FlyToActiveCityProps {
-  activeCityCoords: Coordinates | null;
+interface MapViewProps {
+  center: Coordinates;
+  zoom: number;
 }
 
-const FlyToActiveCity: React.FC<FlyToActiveCityProps> = ({ activeCityCoords }) => {
+const MapView: React.FC<MapViewProps> = ({ center, zoom }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (activeCityCoords) {
-      const zoomLev = 13;
-      const flyToOptions = {
-        duration: 1.5,
-      };
-
-      if (map) {
-        map.flyTo(
-          [activeCityCoords.lat, activeCityCoords.lon],
-          zoomLev,
-          flyToOptions
-        );
-      }
-    }
-  }, [activeCityCoords, map]);
+    map.setView([center.lat, center.lon], zoom);
+  }, [center, zoom, map]);
 
   return null;
 };
@@ -52,13 +40,11 @@ function Mapbox() {
   return (
     <div className="flex-1 basis-[50%] border rounded-lg">
       <MapContainer
-        center={[activeCityCords.lat, activeCityCords.lon]}
-        zoom={13}
         className="rounded-lg m-4"
         style={{ height: "calc(100% - 2rem)", width: "calc(100% - 2rem)" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <FlyToActiveCity activeCityCoords={activeCityCords} />
+        <MapView center={activeCityCords} zoom={13} />
       </MapContainer>
     </div>
   );
