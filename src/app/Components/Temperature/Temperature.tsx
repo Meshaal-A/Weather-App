@@ -19,17 +19,33 @@ function Temperature() {
   const [localTime, setLocalTime] = useState<string>("");
   const [currentDay, setCurrentDay] = useState<string>("");
 
+  // Live time update
+  useEffect(() => {
+    if (!forecast || !forecast.timezone) {
+      return; // No need to set an interval if there's no timezone data
+    }
+
+    const interval = setInterval(() => {
+      const localMoment = moment().utcOffset(forecast.timezone / 60);
+      const formatedTime = localMoment.format("HH:mm:ss");
+      const day = localMoment.format("dddd");
+
+      setLocalTime(formatedTime);
+      setCurrentDay(day);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [forecast]);
+
   // Early return for loading state
   if (!forecast || !forecast.weather) {
     return <div>Loading...</div>;
   }
 
-  const { main, timezone, name, weather } = forecast;
-
+  const { main, name, weather } = forecast;
   const temp = kelvinToCelsius(main?.temp);
   const minTemp = kelvinToCelsius(main?.temp_min);
   const maxTemp = kelvinToCelsius(main?.temp_max);
-
   const { main: weatherMain, description } = weather[0];
 
   const getIcon = () => {
@@ -48,20 +64,6 @@ function Temperature() {
         return clearSky;
     }
   };
-
-  // Live time update
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const localMoment = moment().utcOffset(timezone / 60);
-      const formatedTime = localMoment.format("HH:mm:ss");
-      const day = localMoment.format("dddd");
-
-      setLocalTime(formatedTime);
-      setCurrentDay(day);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [timezone]);
 
   return (
     <div
