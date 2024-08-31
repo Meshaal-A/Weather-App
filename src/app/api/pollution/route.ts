@@ -1,6 +1,8 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
@@ -10,11 +12,11 @@ export async function GET(req: NextRequest) {
 
     const apiKey = process.env.OPENWEATHERMAP_API_KEY;
 
-    const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${`c4cd278034abe4a6e2da5433ab82861d`}`;
+    const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
     const res = await axios.get(url);
     return NextResponse.json(res.data);
   } catch (error) {
     console.log("Error in getting pollution data ", error);
-    return new Response("Error etching pollution data", { status: 500 });
+    return new Response("Error fetching pollution data", { status: 500 });
   }
 }
