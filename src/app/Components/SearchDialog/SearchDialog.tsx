@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   useGlobalContext,
   useGlobalContextUpdate,
@@ -7,15 +8,23 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandInput, CommandList } from "@/components/ui/command";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Command as CommandIcon } from "lucide-react";
-import React from "react";
+
+// Define the type for items in geoCodedList
+interface GeoCodedItem {
+  country: string;
+  state?: string; // Optional if state can be undefined
+  name: string;
+  lat: number;
+  lon: number;
+}
 
 function SearchDialog() {
+  // Assuming geoCodedList and inputValue are coming from your global context
   const {
     geoCodedList = [],
     inputValue = "",
-    handleInput = () => {},
+    handleInput,
   } = useGlobalContext();
-
   const { setActiveCityCoords } = useGlobalContextUpdate();
   const [hoveredIndex, setHoveredIndex] = React.useState<number>(0);
 
@@ -42,28 +51,24 @@ function SearchDialog() {
           <Command className="rounded-lg border shadow-md">
             <CommandInput
               value={inputValue}
-              onChangeCapture={handleInput}
+              onChangeCapture={handleInput} // Correctly using onChange for input handling
               placeholder="Type a command or search..."
             />
             <CommandList>
               <ul className="px-3 pb-2">
                 <p className="p-2 text-sm text-muted-foreground">Suggestions</p>
-
                 {geoCodedList.length === 0 ? (
                   <p>No Results</p>
                 ) : (
-                  geoCodedList.map((item, index) => {
-                    const { country, state, name } = item;
-
+                  geoCodedList.map((item: GeoCodedItem, index: number) => {
+                    const { country, state, name, lat, lon } = item;
                     return (
                       <li
                         key={index}
                         onMouseEnter={() => setHoveredIndex(index)}
                         className={`py-3 px-2 text-sm rounded-sm cursor-default 
                           ${hoveredIndex === index ? "bg-accent" : ""}`}
-                        onClick={() => {
-                          getClickedCoords(item.lat, item.lon);
-                        }}
+                        onClick={() => getClickedCoords(lat, lon)}
                       >
                         <p className="text">
                           {name}, {state && `${state},`} {country}
