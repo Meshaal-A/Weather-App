@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const res = await axios.get(url);
     return NextResponse.json(res.data);
   } catch (error) {
-    console.log("Error in getting pollution data ", error);
+    console.error("Error in getting pollution data: ", error);
     return new Response("Error fetching pollution data", { status: 500 });
   }
 }
