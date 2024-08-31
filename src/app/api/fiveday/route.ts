@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
-    const dailyUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${`c4cd278034abe4a6e2da5433ab82861d`}`;
+    const dailyUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
     const dailyRes = await fetch(dailyUrl, {
       next: { revalidate: 3600 },

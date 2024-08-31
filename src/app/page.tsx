@@ -1,21 +1,52 @@
 "use client";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import AirPollution from "./Components/AirPollution/Airpollution";
-import DailyForecast from "./Components/DailyForecast/DailyForecast";
-import FeelsLike from "./Components/FeelsLike/FeelsLike";
-import Humidity from "./Components/Humidity/Humidity";
-import Mapbox from "./Components/Mapbox/Mapbox";
-import Navbar from "./Components/Navbar";
-import Population from "./Components/Population/Population";
-import Pressure from "./Components/Pressure/Pressure";
-import Sunset from "./Components/Sunset/Sunset";
-import Temperature from "./Components/Temperature/Temperature";
-import UvIndex from "./Components/UvIndex/UvIndex";
-import Visibility from "./Components/Visibility/Visibility";
-import Wind from "./Components/Wind/Wind";
 import defaultStates from "./utils/DefaultStates";
-import FiveDayForecast from "./Components/FiveDayForecast/FiveDayForecast";
 import { useGlobalContextUpdate } from "./context/globalContext";
+
+// Dynamically import components that might cause SSR issues
+const AirPollution = dynamic(
+  () => import("./Components/AirPollution/Airpollution"),
+  { ssr: false }
+);
+const DailyForecast = dynamic(
+  () => import("./Components/DailyForecast/DailyForecast"),
+  { ssr: false }
+);
+const FeelsLike = dynamic(() => import("./Components/FeelsLike/FeelsLike"), {
+  ssr: false,
+});
+const Humidity = dynamic(() => import("./Components/Humidity/Humidity"), {
+  ssr: false,
+});
+const Mapbox = dynamic(() => import("./Components/Mapbox/Mapbox"), {
+  ssr: false,
+});
+const Navbar = dynamic(() => import("./Components/Navbar"), { ssr: false });
+const Population = dynamic(() => import("./Components/Population/Population"), {
+  ssr: false,
+});
+const Pressure = dynamic(() => import("./Components/Pressure/Pressure"), {
+  ssr: false,
+});
+const Sunset = dynamic(() => import("./Components/Sunset/Sunset"), {
+  ssr: false,
+});
+const Temperature = dynamic(
+  () => import("./Components/Temperature/Temperature"),
+  { ssr: false }
+);
+const UvIndex = dynamic(() => import("./Components/UvIndex/UvIndex"), {
+  ssr: false,
+});
+const Visibility = dynamic(() => import("./Components/Visibility/Visibility"), {
+  ssr: false,
+});
+const Wind = dynamic(() => import("./Components/Wind/Wind"), { ssr: false });
+const FiveDayForecast = dynamic(
+  () => import("./Components/FiveDayForecast/FiveDayForecast"),
+  { ssr: false }
+);
 
 export default function Home() {
   const { setActiveCityCoords } = useGlobalContextUpdate();
@@ -23,10 +54,13 @@ export default function Home() {
   const getClickedCityCords = (lat: number, lon: number) => {
     setActiveCityCoords([lat, lon]);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    // Ensure this code only runs on the client side
+    if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
